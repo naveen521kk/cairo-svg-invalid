@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Meson
+      run: |
+        pip install meson ninja
+    - name: Build
+      run: |
+        meson _build
+        meson compile -C _build
+    - name: Run
+      run: |
+        ./_build/test-svg
+    - uses: actions/upload-artifact@v3
+      with:
+        name: svgs
+        path: _build/
