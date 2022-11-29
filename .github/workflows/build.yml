@@ -28,4 +28,6 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: svgs
-        path: _build/
+        path: |
+          test.svg
+          ./Users/runner/test
