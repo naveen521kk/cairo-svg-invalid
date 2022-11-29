@@ -5,7 +5,7 @@
 
 #define WIDTH 500
 #define HEIGHT 500
-#define TEXT "{ }"
+#define TEXT " "
 
 int main(void)
 {
