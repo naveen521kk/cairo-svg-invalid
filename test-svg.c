@@ -15,9 +15,8 @@ int main(void)
     PangoLayout *layout;
     double width_layout = WIDTH;
     double font_size_c = 20;
-    PangoAttrList *pango_attr_list = pango_attr_list_new();
     const char *filename = "test.svg";
-
+    printf("Starting test");
     surface = cairo_svg_surface_create(filename, WIDTH, HEIGHT);
     if (surface == NULL) {
         fprintf(stderr, "Error: cannot create surface\n");
@@ -51,7 +50,6 @@ int main(void)
     pango_cairo_show_layout(cr, layout);
 
     g_object_unref(layout);
-    pango_attr_list_unref(pango_attr_list);
     cairo_destroy(cr);
 
     cairo_surface_destroy(surface);
