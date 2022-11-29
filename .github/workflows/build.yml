@@ -15,6 +15,9 @@ jobs:
     - name: Install Meson
       run: |
         pip install meson ninja
+    - name: Install Deps
+      run: |
+        brew install fribidi
     - name: Build
       run: |
         meson _build
