@@ -20,11 +20,11 @@ jobs:
         brew install fribidi
     - name: Build
       run: |
-        meson setup _build
-        meson compile -C _build
+        meson setup _build --prefix=/Users/runner/test
+        meson install -C _build
     - name: Run
       run: |
-        ./_build/test-svg
+        ./Users/runner/test/test-svg
     - uses: actions/upload-artifact@v3
       with:
         name: svgs
