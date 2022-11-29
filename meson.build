@@ -1,7 +1,6 @@
 project('text2svg', 'c',
   version : '0.1.0',
   default_options: [
-    'default_library=static',
     'warning_level=3',
     'buildtype=release',
     'wrap_mode=nopromote',
