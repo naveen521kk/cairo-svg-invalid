@@ -24,7 +24,7 @@ jobs:
         meson install -C _build
     - name: Run
       run: |
-        ./Users/runner/test/test-svg
+        /Users/runner/test/bin/test-svg
     - uses: actions/upload-artifact@v3
       with:
         name: svgs

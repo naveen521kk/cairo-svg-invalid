@@ -80,3 +80,4 @@ compile_commands.json
 builddir/
 _build/
 .vscode/
+*.svg
