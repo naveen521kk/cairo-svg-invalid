@@ -1,0 +1,58 @@
+From cdb7c298c7b89307ad69b94a1126221bd7c06579 Mon Sep 17 00:00:00 2001
+From: Adrian Johnson <ajohnson@redneon.com>
+Date: Sat, 18 Jun 2022 12:50:24 +0930
+Subject: [PATCH] svg: Fix invalid output when image size is 0x0
+
+cairo_surface_write_to_png_stream fails if width or height is 0
+---
+ src/cairo-svg-surface.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/src/cairo-svg-surface.c b/src/cairo-svg-surface.c
+index dfb72b2ad..b39a94a37 100644
+--- a/src/cairo-svg-surface.c
++++ b/src/cairo-svg-surface.c
+@@ -2118,24 +2118,28 @@ _cairo_svg_surface_emit_surface (cairo_svg_document_t *document,
+     assert (is_bounded);
+ 
+     _cairo_svg_stream_printf (&document->xml_node_defs,
+-			      "<image id=\"source-%d\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\" xlink:href=\"",
++			      "<image id=\"source-%d\" x=\"%d\" y=\"%d\" width=\"%d\" height=\"%d\"",
+ 			      source_id,
+ 			      extents.x, extents.y,
+ 			      extents.width, extents.height);
+ 
+-    cairo_surface_get_mime_data (surface, CAIRO_MIME_TYPE_URI,
+-				 &uri, &uri_len);
+-    if (uri != NULL) {
+-	_cairo_svg_surface_emit_attr_value (&document->xml_node_defs,
+-					    uri, uri_len);
+-    } else {
+-	status = _cairo_surface_base64_encode (surface,
+-					       &document->xml_node_defs);
+-	if (unlikely (status))
+-	    return status;
++    if (extents.width != 0 && extents.height != 0) {
++	_cairo_svg_stream_printf (&document->xml_node_defs, " xlink:href=\"");
++	cairo_surface_get_mime_data (surface, CAIRO_MIME_TYPE_URI,
++				     &uri, &uri_len);
++	if (uri != NULL) {
++	    _cairo_svg_surface_emit_attr_value (&document->xml_node_defs,
++						uri, uri_len);
++	} else {
++	    status = _cairo_surface_base64_encode (surface,
++						   &document->xml_node_defs);
++	    if (unlikely (status))
++		return status;
++	}
++    _cairo_svg_stream_printf (&document->xml_node_defs, "\"");
+     }
+ 
+-    _cairo_svg_stream_printf (&document->xml_node_defs, "\"/>\n");
++    _cairo_svg_stream_printf (&document->xml_node_defs, "/>\n");
+ 
+     return CAIRO_STATUS_SUCCESS;
+ }
+-- 
+GitLab
+
